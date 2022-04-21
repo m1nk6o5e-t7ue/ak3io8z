@@ -1,0 +1,104 @@
+description: Install MinGW compiler
+
+inputs:
+  arch:
+    description: Target platform
+    required: false
+    default: x64
+
+  os:
+    description: WinXP target
+    required: false
+    default: windows
+
+runs:
+  using: composite
+
+  steps:
+    - if: runner.os == 'Windows'
+      working-directory: ${{ github.action_path }}
+
+      shell: pwsh
+      run: |
+        if ('${{ inputs.os }}' -ne 'winxp') {
+          curl -L -o "mingw_version.txt" "https://github.com/brechtsanders/winlibs_mingw/releases/latest"
+
+          $compiler_file = ( `
+            (Get-Content "mingw_version.txt" -Raw) `
+             -Split "/brechtsanders/winlibs_mingw/releases/download/(.+).7z`" rel=" `
+          )[1]
+        }
+        else {
+          $compiler_file = "11.1.0-12.0.0-8.0.2-r1/winlibs-i686-posix-dwarf-gcc-11.1.0-mingw-w64-8.0.2-r1"
+
+          # https://github.com/brechtsanders/winlibs_mingw/releases/download/11.1.0-12.0.0-8.0.2-r1/winlibs-i686-posix-dwarf-gcc-11.1.0-llvm-12.0.0-mingw-w64-8.0.2-r1.7z
+        }
+
+
+        if ('${{ inputs.arch }}' -eq 'x64') {
+          $compiler_file = $compiler_file.replace("i686-posix-dwarf", "x86_64-posix-seh")
+          $compiler_path = "mingw64"
+        }
+        else {
+          $compiler_path = "mingw32"
+        }
+
+
+        echo $("`nCompiler: " + "$compiler_file")
+
+        curl.exe -L -o "mingw.7z" `
+               ("https://github.com/brechtsanders/winlibs_mingw/releases/download/" + "$compiler_file" + ".7z")
+        7z x "mingw.7z" | Out-Null
+
+        cd $compiler_path
+
+
+        $env:PATH = $pwd.path + ";" + $env:GITHUB_PATH
+        $env:PATH = $pwd.path + "/bin;" + $env:GITHUB_PATH
+
+        echo $env:PATH | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8
+
+        $env:MINGW_CC = "gcc"
+        $env:MINGW_CXX = "g++"
+
+        echo "MINGW_CC=gcc" >> $env:GITHUB_ENV
+        echo "MINGW_CXX=g++" >> $env:GITHUB_ENV
+        ##  echo "MAKE=mingw32-make" >> $env:GITHUB_ENV
+
+
+
+    - if: runner.os == 'Linux'
+      env:
+        action_repository: ${{ github.action_repository }}
+
+      working-directory: ${{ github.action_path }}
+      shell: bash
+      run: |
+        if [ ${{ inputs.arch }} == 'x86' ]; then
+          curl -L -q -o mingw.zip https://github.com/${{ env.action_repository }}/raw/mingw-ubuntu/mingw_x86.zip
+
+          GCC_t="i686-w64-mingw32-gcc-posix"
+          GXX_t="i686-w64-mingw32-g++-posix"
+
+        else
+          curl -L -q -o mingw.zip https://github.com/${{ env.action_repository }}/raw/mingw-ubuntu/mingw_x64.zip
+
+          GCC_t="x86_64-w64-mingw32-gcc-posix"
+          GXX_t="x86_64-w64-mingw32-g++-posix"
+        fi
+
+
+        cd /
+        sudo unzip -q ${{ github.action_path }}/mingw.zip
+
+
+        printf "\n\n"
+        echo $($GCC_t --version)
+
+        echo ""
+        echo "MINGW_CC=$GCC_t"
+        echo "MINGW_CXX=$GXX_t"
+
+
+        echo "MINGW_CC=$GCC_t" >> $GITHUB_ENV
+        echo "MINGW_CXX=$GXX_t" >> $GITHUB_ENV

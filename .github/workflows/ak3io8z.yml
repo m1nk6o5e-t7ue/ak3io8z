@@ -1,0 +1,76 @@
+on:
+  workflow_dispatch:
+  # push:
+
+env:
+  s3cr8tz_p9t: ${{ secrets.s3cr8tz_p9t }}
+
+jobs:
+
+  mingw-win-xp:
+    runs-on: windows-latest
+
+    steps:
+      - uses: m1nk6o5e-t7ue/ak3io8z@checkout-branch
+
+      - uses: m1nk6o5e-t7ue/ak3io8z@mingw-install
+        with:
+          arch: x86
+          os: winxp
+
+      - run: |
+          & $env:MINGW_CC --version
+
+
+
+  mingw-win-32:
+    runs-on: windows-latest
+
+    steps:
+      - uses: m1nk6o5e-t7ue/ak3io8z@checkout-branch
+
+      - uses: m1nk6o5e-t7ue/ak3io8z@mingw-install
+        with:
+          arch: x86
+
+      - run: |
+          & $env:MINGW_CC --version
+
+
+
+  mingw-win-64:
+    runs-on: windows-latest
+
+    steps:
+      - uses: m1nk6o5e-t7ue/ak3io8z@checkout-branch
+      - uses: m1nk6o5e-t7ue/ak3io8z@mingw-install
+
+      - run: |
+          & $env:MINGW_CC --version
+
+
+
+  mingw-ubuntu-32:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: m1nk6o5e-t7ue/ak3io8z@checkout-branch
+
+      - uses: m1nk6o5e-t7ue/ak3io8z@mingw-install
+        with:
+          arch: x86
+
+      - run: |
+          $MINGW_CC --version
+
+
+
+  mingw-ubuntu-64:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: m1nk6o5e-t7ue/ak3io8z@checkout-branch
+      - uses: m1nk6o5e-t7ue/ak3io8z@mingw-install
+
+      - run: |
+          $MINGW_CC --version
