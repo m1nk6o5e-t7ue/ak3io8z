@@ -1,0 +1,59 @@
+description: Squash commits in single branch
+
+inputs:
+  depth:
+    description: Squash amount
+    required: false
+    default: 0
+  
+  author:
+    description: Squash author
+    required: false
+    default: ''
+
+runs:
+  using: composite
+
+  steps:
+    - shell: bash
+      run: |
+        if [[ -z "${{ inputs.author }}" ]]; then
+          author=$(git log -1 --pretty=format:'%an')
+        else
+          author=${{ inputs.author }}
+        fi
+
+
+        #####
+
+
+        if [[ "${{ inputs.depth }}" == "0" ]]; then
+          git fetch --deepen=500 --quiet
+
+          max_merge=$(git rev-list --count HEAD)
+          depth=0
+
+          while (( $depth < $max_merge )); do
+            if [[ "$(git log -1 --skip=$depth --pretty=format:'%an')" != "$author" ]]; then
+              break
+            fi
+
+            depth=$(( $depth+1 ))
+          done
+
+        else
+          git fetch --deepen=$(( $depth+1 )) --quiet
+        fi
+
+
+        depth=$(( $depth-1 ))
+
+
+        #####
+
+
+        if (( $depth >= 1 )); then
+          git reset --soft HEAD~$depth
+          git commit --amend --no-edit
+          git log -1
+        fi
