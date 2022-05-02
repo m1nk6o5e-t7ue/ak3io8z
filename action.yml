@@ -1,0 +1,53 @@
+description: Squash all branches
+
+runs:
+  using: composite
+
+  steps:
+    - shell: bash
+      run: |
+        branches=()
+        eval "$(git for-each-ref --shell --format='branches+=(%(refname:lstrip=3))' 'refs/remotes/origin')"
+
+        git branch --all
+        git for-each-ref --shell 'refs/remotes/origin'
+
+
+        for branch in "${branches[@]}"; do
+          if [[ "$branch" == "HEAD" ]]; then
+            continue
+          fi
+
+
+          git checkout $branch --quiet
+          git fetch --deepen=500 --quiet
+
+          author=$(git config user.name)
+
+
+          #####
+
+
+          max_merge=$(git rev-list --count HEAD)
+          depth=0
+
+          while (( $depth < $max_merge )); do
+            if [[ "$(git log -1 --skip=$depth --pretty=format:'%an')" != "$author" ]]; then
+              break
+            fi
+            depth=$(( $depth+1 ))
+          done
+
+          depth=$(( $depth-1 ))
+
+
+          #####
+
+
+          if (( $depth >= 1 )); then
+            git reset --soft HEAD~$depth
+            git commit --amend --no-edit
+
+            git push -f origin HEAD:$branch
+          fi
+        done
