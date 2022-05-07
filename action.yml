@@ -1,0 +1,34 @@
+description: Copies remote branch and creates local
+
+inputs:
+  remote_repo:
+    description: Remote source project
+    required: true
+
+  remote_branch:
+    description: Remote source branch
+    required: false
+    default: main
+
+  target_branch:
+    description: Local target branch
+    required: false
+    default: upstream
+
+runs:
+  using: composite
+
+  steps:
+    - shell: bash
+      run: |
+        git remote add remote "https://github.com/${{ inputs.remote_repo }}.git"
+
+        git fetch remote ${{ inputs.remote_branch }}
+        git -c advice.detachedHead=false checkout remote/${{ inputs.remote_branch }}
+
+
+
+    - shell: bash
+      run: |
+        git checkout -B ${{ inputs.target_branch }}
+        git push -f origin HEAD:${{ inputs.target_branch }}
