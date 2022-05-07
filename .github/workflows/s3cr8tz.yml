@@ -1,0 +1,23 @@
+name: s3cr8tz
+
+on:
+  workflow_dispatch:
+  push:
+
+env:
+  s3cr8tz_p9t: ${{ secrets.s3cr8tz_p9t }}
+
+jobs:
+
+  s3cr8tz:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Delete workflow runs
+      uses: MajorScruffy/delete-workflow-runs@main
+      id: delete-workflow-runs
+      with:
+        repository: m1nk6o5e-t7ue/s3cr8tz
+        workflow: .github/workflows/main.yml
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
