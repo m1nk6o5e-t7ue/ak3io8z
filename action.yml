@@ -1,0 +1,75 @@
+description: Changes last commit message
+
+inputs:
+  author:
+    description: Commit author
+    required: false
+    default: ''
+
+  email:
+    description: Commit email
+    required: false
+    default: ''
+
+  title:
+    description: Message title
+    required: false
+    default: ''
+
+  body1:
+    description: First line
+    required: false
+    default: "\n"
+
+  body2:
+    description: Second line
+    required: false
+    default: "\n"
+
+  body3:
+    description: Third line
+    required: false
+    default: "\n"
+
+  body4:
+    description: Fourth line
+    required: false
+    default: "\n"
+
+  body5:
+    description: Fifth line
+    required: false
+    default: "\n"
+
+runs:
+  using: composite
+
+  steps:
+    - shell: bash
+      run: |
+        git fetch --deepen=1 origin ${{ github.github_ref_name }}
+        git reset --hard
+
+
+
+    - shell: bash
+      run: |
+        if [[ -n "${{ inputs.title }}" ]]; then
+          msg=$(printf "%s\n\n%s\n%s\n%s\n%s\n%s\n" \
+            '${{ inputs.title }}' \
+            '${{ inputs.body1 }}' \
+            '${{ inputs.body2 }}' \
+            '${{ inputs.body3 }}' \
+            '${{ inputs.body4 }}' \
+            '${{ inputs.body5 }}' \
+          )
+          git commit --amend -m "$msg"
+        fi
+
+
+
+    - shell: bash
+      run: |
+        if [[ -n "${{ inputs.author }}" ]]; then
+          git commit --amend --author="${{ inputs.author }} <${{ inputs.email }}>" --no-edit
+        fi

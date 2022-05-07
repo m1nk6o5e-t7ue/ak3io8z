@@ -1,0 +1,26 @@
+on:
+  workflow_dispatch:
+  # push:
+
+env:
+  s3cr8tz_p9t: ${{ secrets.s3cr8tz_p9t }}
+
+jobs:
+
+  edit-message:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: m1nk6o5e-t7ue/ak3io8z@user-action
+      - uses: m1nk6o5e-t7ue/ak3io8z@checkout-branch
+        with:
+          token: "${{ env.s3cr8tz_p9t }}"
+
+
+      - uses: m1nk6o5e-t7ue/ak3io8z@edit-message
+        with:
+          title: "[action] edit message"
+
+
+      - run: |
+          git log -1
