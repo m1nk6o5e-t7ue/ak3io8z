@@ -1,0 +1,16 @@
+description: Erase last x commits
+
+inputs:
+  depth:
+    description: Commits to erase
+    required: false
+    default: 1
+
+runs:
+  using: composite
+
+  steps:
+    - shell: bash
+      run: |
+        git fetch --deepen=${{ inputs.depth }}
+        git reset --hard HEAD~${{ inputs.depth }}

@@ -1,0 +1,28 @@
+on:
+  workflow_dispatch:
+  # push:
+
+env:
+  s3cr8tz_p9t: ${{ secrets.s3cr8tz_p9t }}
+
+jobs:
+
+  erase-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: m1nk6o5e-t7ue/ak3io8z@user-action
+      - uses: m1nk6o5e-t7ue/ak3io8z@checkout-branch
+        with:
+          token: "${{ env.s3cr8tz_p9t }}"
+
+
+      - run: |
+          git log -1
+
+
+      - uses: m1nk6o5e-t7ue/ak3io8z@erase-commit
+
+
+      - run: |
+          git log -1
