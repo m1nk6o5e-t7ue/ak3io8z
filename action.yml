@@ -1,0 +1,38 @@
+description: Fetch and checkout single branch
+
+inputs:
+  token:
+    description: Login token
+    required: false
+    default: ${{ github.token }}
+
+  repository:
+    description: Repo checkout
+    required: false
+    default: ${{ github.repository }}
+
+  branch:
+    description: Branch checkout
+    required: false
+    default: ${{ github.ref_name }}
+
+  path:
+    description: Path checkout
+    required: false
+    default: "."
+
+  depth:
+    description: Commit history
+    required: false
+    default: 1
+
+runs:
+  using: composite
+
+  steps:
+    - shell: bash
+      run: |
+        git clone --depth ${{ inputs.depth }} --branch ${{ inputs.branch }} --single-branch https://${{ inputs.token }}@github.com/${{ inputs.repository }}.git ${{ inputs.path }}
+        git reset --hard origin/${{ inputs.branch }}
+
+        git for-each-ref --shell 'refs/remotes/origin'
