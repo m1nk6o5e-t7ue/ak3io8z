@@ -1,0 +1,10 @@
+description: Pushes empty date commit to keep repo alive
+
+runs:
+  using: composite
+
+  steps:
+    - shell: bash
+      run: |
+        git commit --amend --no-edit --date "$(date)"
+        git push -f origin
