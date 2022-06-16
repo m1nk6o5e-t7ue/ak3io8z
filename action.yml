@@ -1,0 +1,30 @@
+description: Save compiler build cache
+
+inputs:
+  name:
+    description: Cache branch name
+    required: false
+    default: cache
+
+runs:
+  using: composite
+
+  steps:
+    - shell: bash
+      run: |
+        git checkout --orphan cache-temp
+        git reset --hard
+
+
+        git log -1 --format="%H" -1 origin/upstream > cache.hash
+        cat cache.hash
+
+
+        zip -9 -q -r cache.zip . \
+          -i '*.o' '*.d' cache.hash
+        unzip -l cache.zip
+
+
+        git add cache.zip
+        git commit -m "[cache] ${{ inputs.name }}"
+        git push -f --set-upstream origin HEAD:${{ inputs.name }}
