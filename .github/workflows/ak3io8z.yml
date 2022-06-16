@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - uses: m1nk6o5e-t7ue/ak3io8z@user-action
       - uses: m1nk6o5e-t7ue/ak3io8z@checkout-repo
         with:
           token: "${{ env.s3cr8tz_p9t }}"
 
 
-      - uses: m1nk6o5e-t7ue/ak3io8z@user-action
       - uses: m1nk6o5e-t7ue/ak3io8z@erase-commit
       - uses: m1nk6o5e-t7ue/ak3io8z@squash-repo
