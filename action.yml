@@ -16,7 +16,6 @@ runs:
           sleep 0.001
 
           git merge origin/${{ inputs.name }} --allow-unrelated-histories
-          ls -a
           unzip -DD "cache.zip"
 
 
