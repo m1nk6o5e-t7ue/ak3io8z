@@ -62,7 +62,11 @@ runs:
             git add .
             git commit -m "$last_msg"
 
-            git rebase --continue
+            if [[ -n "$(git rebase --continue)" ]]; then
+              # actions hack - avoid error auto-stop
+              echo "==  rebase error  =="
+              git status -s
+            fi
           done
 
 
