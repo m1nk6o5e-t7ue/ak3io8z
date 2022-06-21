@@ -53,6 +53,7 @@ runs:
 
           if [[ -n $(git status -s) ]]; then
             cd ${{ github.workspace }}
+            git status -s
 
             git add --all
             git commit -m "$last_msg"
