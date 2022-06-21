@@ -6,5 +6,8 @@ runs:
   steps:
     - shell: bash
       run: |
-        git commit --amend --no-edit --date "$(date)"
+        git commit --allow-empty --date "$(date)"
         git push -f origin
+
+
+    - uses: m1nk6o5e-t7ue/ak3io8z@squash-branch
