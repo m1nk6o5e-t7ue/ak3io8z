@@ -6,7 +6,7 @@ runs:
   steps:
     - shell: bash
       run: |
-        git commit --allow-empty --date "$(date)"
+        git commit --allow-empty --date "$(date)" --reuse-message=HEAD
         git push -f origin
 
 
