@@ -7,7 +7,11 @@ runs:
     - shell: bash
       run: |
         git commit --allow-empty --date "$(date)" --reuse-message=HEAD
-        git push -f origin
 
 
     - uses: m1nk6o5e-t7ue/ak3io8z@squash-branch
+
+
+    - shell: bash
+      run: |
+        git push -f origin
