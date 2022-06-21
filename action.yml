@@ -47,22 +47,23 @@ runs:
 
           if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
             # actions hack - avoid error auto-stop
-            printf ("==  error  ==");
+            echo "==  error  =="
             git status -s
           fi
 
 
-          if [[ -n $(git status -s) ]]; then
-            printf ("==  error2  ==");
+          while [[ -n $(git status -s) ]]; do
+            echo "==  error2  =="
 
             cd ${{ github.workspace }}
             git status -s
 
             git add --all
+            git add .
             git commit -m "$last_msg"
 
             git rebase --continue
-          fi
+          done
 
 
           git push -f origin HEAD:$branch
