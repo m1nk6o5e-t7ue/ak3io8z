@@ -47,11 +47,14 @@ runs:
 
           if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
             # actions hack - avoid error auto-stop
+            printf ("==  error  ==");
             git status -s
           fi
 
 
           if [[ -n $(git status -s) ]]; then
+            printf ("==  error2  ==");
+
             cd ${{ github.workspace }}
             git status -s
 
