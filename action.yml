@@ -45,6 +45,11 @@ runs:
 
           last_msg="$(git log -1 --pretty=format:%B)"
 
+          if [[ $(git rebase remote/${{ inputs.remote_branch }}) && ($? -ne 0) ]]; then
+            echo "==  no  =="
+          fi
+
+
           if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
             # actions hack - avoid error auto-stop
             echo "==  error  =="
@@ -77,7 +82,7 @@ runs:
           fi
 
 
-          if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" && ($? -ne 0) ]]; then
+          if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
             # actions hack - avoid error auto-stop
             echo "==  error3  =="
             echo $ret
