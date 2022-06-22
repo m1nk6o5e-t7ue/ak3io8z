@@ -45,21 +45,21 @@ runs:
 
           last_msg="$(git log -1 --pretty=format:%B)"
 
-          git rebase remote/${{ inputs.remote_branch }} && 0
+          git rebase remote/${{ inputs.remote_branch }} && printf ""
 
-          if [[ $(git rebase remote/${{ inputs.remote_branch }}) && ($? -eq 0) ]]; then
-            echo "==  yes  =="
+#          if [[ $(git rebase remote/${{ inputs.remote_branch }}) && ($? -eq 0) ]]; then
+#            echo "==  yes  =="
+#
+#          elif [[ $(git rebase remote/${{ inputs.remote_branch }}) && ($? -ne 0) ]]; then
+#            echo "==  no  =="
+#          fi
 
-          elif [[ $(git rebase remote/${{ inputs.remote_branch }}) && ($? -ne 0) ]]; then
-            echo "==  no  =="
-          fi
 
-
-          if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
-            # actions hack - avoid error auto-stop
-            echo "==  error  =="
-            git status -s
-          fi
+ #         if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
+ #           # actions hack - avoid error auto-stop
+ #           echo "==  error  =="
+ #           git status -s
+ #         fi
 
 
           while [[ -n $(git status -s) ]]; do
@@ -68,15 +68,19 @@ runs:
             cd ${{ github.workspace }}
             git status -s
 
+
             git add --all
             git add .
             git commit -m "$last_msg"
 
-            if [[ -n "$(git rebase --continue)" ]]; then
-              # actions hack - avoid error auto-stop
-              echo "==  rebase error  =="
-              git status -s
-            fi
+
+            git rebase --continue && printf ""
+
+#            if [[ -n "$(git rebase --continue)" ]]; then
+#              # actions hack - avoid error auto-stop
+#              echo "==  rebase error  =="
+#              git status -s
+#            fi
           done
 
 
