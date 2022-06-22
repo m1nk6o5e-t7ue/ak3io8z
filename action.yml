@@ -77,7 +77,7 @@ runs:
           fi
 
 
-          if [[ -n "ret=$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
+          if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" && ($? -ne 0) ]]; then
             # actions hack - avoid error auto-stop
             echo "==  error3  =="
             echo $ret
