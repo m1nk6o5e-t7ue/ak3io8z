@@ -81,6 +81,7 @@ runs:
             # actions hack - avoid error auto-stop
             echo "==  error3  =="
             echo $ret
+            echo "==  error3a  =="
             git status -s
           fi
 
