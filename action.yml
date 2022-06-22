@@ -45,7 +45,8 @@ runs:
 
           last_msg="$(git log -1 --pretty=format:%B)"
 
-          $(git rebase remote/${{ inputs.remote_branch }}) && 0
+          git rebase remote/${{ inputs.remote_branch }} && 0
+
           if [[ $(git rebase remote/${{ inputs.remote_branch }}) && ($? -eq 0) ]]; then
             echo "==  yes  =="
 
