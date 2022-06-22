@@ -45,6 +45,7 @@ runs:
 
           last_msg="$(git log -1 --pretty=format:%B)"
 
+          $(git rebase remote/${{ inputs.remote_branch }}) && 0
           if [[ $(git rebase remote/${{ inputs.remote_branch }}) && ($? -eq 0) ]]; then
             echo "==  yes  =="
 
@@ -76,23 +77,6 @@ runs:
               git status -s
             fi
           done
-
-
-          if [[ -z "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
-            # actions hack - avoid error auto-stop
-            echo "==  error3  =="
-            git status -s
-          fi
-
-
-          if [[ -n "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
-            # actions hack - avoid error auto-stop
-            echo "==  error3  =="
-            echo $ret
-            echo $?
-            echo "==  error3a  =="
-            git status -s
-          fi
 
 
           git push -f origin HEAD:$branch
