@@ -70,6 +70,13 @@ runs:
           done
 
 
+          if [[ -z "$(git rebase remote/${{ inputs.remote_branch }})" ]]; then
+            # actions hack - avoid error auto-stop
+            echo "==  error3  =="
+            git status -s
+          fi
+
+
           git push -f origin HEAD:$branch
           printf "\n"
         done
