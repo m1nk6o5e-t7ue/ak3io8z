@@ -40,6 +40,8 @@ runs:
           fi
 
 
+          #####
+
 
           printf "Rebasing %s\n" $branch
 
@@ -49,10 +51,10 @@ runs:
           git rebase remote/${{ inputs.remote_branch }} && printf ""
 
           while [[ -n $(git status -s) ]]; do
-            cd ${{ github.workspace }}
             git status -s
 
 
+            cd ${{ github.workspace }}
             git add --all
             git add .
             git commit -m "$last_msg"
