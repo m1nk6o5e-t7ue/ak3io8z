@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 5 * * *'
+  #schedule:
+  #  - cron: '0 5 * * *'
 
 env:
   s3cr8tz_p9t: ${{ secrets.s3cr8tz_p9t }}
